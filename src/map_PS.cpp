@@ -1,45 +1,45 @@
-#include "map_PS.h"
+#include "map_PS.h"//åŒ…å«å¤´æ–‡ä»¶
 
 int main()
 {
 	cv::Mat srcMapImg;
-	cv::namedWindow("srcImg", CV_WINDOW_NORMAL);
-	if (readSrcMapImg("../data/map.pgm", srcMapImg))//¶ÁÈëµØÍ¼
+	cv::namedWindow("srcImg", CV_WINDOW_NORMAL);//åˆ›å»ºä¸€ä¸ªå¯æ”¹å˜å¤§å°çš„çª—å£
+	if (readSrcMapImg("../data/map.pgm", srcMapImg))//è¯»å…¥åœ°å›¾
 	{
 
 		std::cout << "The result image save as data/result.png\nEnter 'ESC' exit\n";
 		cv::imshow("srcImg", srcMapImg);
 		cv::waitKey(20);
-		//ĞÎÌ¬Ñ§²Ù×÷
+		//å½¢æ€å­¦æ“ä½œ
 		cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
-		//¿ª²Ù×÷ 
+		//å¼€æ“ä½œ 
 		//cv::morphologyEx(binaryImg, binaryImg, cv::MORPH_OPEN, element);
-		//±Õ²Ù×÷ 
+		//é—­æ“ä½œ 
 		cv::morphologyEx(srcMapImg, srcMapImg, cv::MORPH_CLOSE, element);
 
-		//½øĞĞ¶şÖµ»¯´¦Àí 
+		//è¿›è¡ŒäºŒå€¼åŒ–å¤„ç† 
 		/*cv::Mat binaryImg = cv::Mat::zeros(srcMapImg.size(), CV_8UC1);*/
 		cv::Mat binaryImg;
 		cv::threshold(srcMapImg, binaryImg, 240, 255, CV_THRESH_BINARY);
-		//cv::threshold(srcMapImg, binaryImg, 30, 255, CV_THRESH_BINARY_INV);//µÃµ½Ç½
+		//cv::threshold(srcMapImg, binaryImg, 30, 255, CV_THRESH_BINARY_INV);//å¾—åˆ°å¢™
 		//cv::imshow("binary", binaryImg);
 
-		//µÃµ½Ç½ÌåÂÖÀª
+		//å¾—åˆ°å¢™ä½“è½®å»“
 		std::vector< std::vector < cv::Point> > contours;
 		std::vector< cv::Vec4i > hierarchy;
-		cv::findContours(binaryImg, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);//Ö»»ñÈ¡Íâ²¿ÂÖÀª£¬²¢´æ´¢ËùÓĞÂÖÀªµã
+		cv::findContours(binaryImg, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);//åªè·å–å¤–éƒ¨è½®å»“ï¼Œå¹¶å­˜å‚¨æ‰€æœ‰è½®å»“ç‚¹
 		cv::Mat contoursImage(srcMapImg.rows, srcMapImg.cols, CV_8UC1, cv::Scalar(255));
-		if (contours.size() != 0)//ÕÒµ½ÂÖÀª
+		if (contours.size() != 0)//æ‰¾åˆ°è½®å»“
 		{
 			for (int i = 0; i<contours.size(); i++)
 			{
-				//»æÖÆÇ½ÌåÂÖÀª
-				//Í¨¹ıĞŞ¸ÄdrawContours()µÄµÚÎå¸ö²ÎÊı¿ÉÒÔĞŞ¸ÄÇ½µÄºñ¶È£¬´Ë´¦ÉèÖÃÎª2¸öÏñËØ¿í¶È
+				//ç»˜åˆ¶å¢™ä½“è½®å»“
+				//é€šè¿‡ä¿®æ”¹drawContours()çš„ç¬¬äº”ä¸ªå‚æ•°å¯ä»¥ä¿®æ”¹å¢™çš„åšåº¦ï¼Œæ­¤å¤„è®¾ç½®ä¸º2ä¸ªåƒç´ å®½åº¦
 				cv::drawContours(srcMapImg, contours, i, cv::Scalar(0),2);
 				//std::cout << "draw Contours over" << std::endl;
-				//Ìî³äµØÍ¼»ÒÉ«ÇøÓò
-				//fillMap(srcMapImg, srcMapImg,contours[i], true);//±éÀúÍ¼Ïñ½øĞĞÏñËØ²Ù×÷
-				floodFillonMouse(srcMapImg,contours[i], true);//ÓÃÊó±ê½øĞĞÏñËØ²Ù×÷
+				//å¡«å……åœ°å›¾ç°è‰²åŒºåŸŸ
+				//fillMap(srcMapImg, srcMapImg,contours[i], true);//éå†å›¾åƒè¿›è¡Œåƒç´ æ“ä½œ
+				floodFillonMouse(srcMapImg,contours[i], true);//ç”¨é¼ æ ‡è¿›è¡Œåƒç´ æ“ä½œ
 			}
 		}
 		else
