@@ -1,0 +1,3 @@
+/home/andyoyo/opencv/map_PS/build/CMakeFiles/edit_cache.dir
+/home/andyoyo/opencv/map_PS/build/CMakeFiles/rebuild_cache.dir
+/home/andyoyo/opencv/map_PS/build/CMakeFiles/map_PS.dir
