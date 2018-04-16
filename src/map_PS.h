@@ -1,18 +1,18 @@
 #ifndef _MAP_PS_H
 #define _MAP_PS_H
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>//åŒ…å«opencvå¤´æ–‡ä»¶
 #include <iostream>
 #include <fstream>
 
 
 //-----------------------------readSrcMapImg()---------------------------
-//                             ¶ÁÈ¡µØÍ¼ÎÄ¼ş
-//filename: µØÍ¼ÎÄ¼şËùÔÚÂ·¾¶ºÍÎÄ¼şÃû
-//srcMapImg:ÓÃÀ´´æ´¢¶ÁÈ¡µÄµØÍ¼ÎÄ¼ş
+//                             è¯»å–åœ°å›¾æ–‡ä»¶
+//filename: åœ°å›¾æ–‡ä»¶æ‰€åœ¨è·¯å¾„å’Œæ–‡ä»¶å
+//srcMapImg:ç”¨æ¥å­˜å‚¨è¯»å–çš„åœ°å›¾æ–‡ä»¶
 bool readSrcMapImg(const std::string& filename, cv::Mat& srcMapImg)
 {
-	srcMapImg = cv::imread(filename,0);//ÔØÈë»Ò¶ÈÍ¼
+	srcMapImg = cv::imread(filename,0);//è½½å…¥ç°åº¦å›¾
 	if (!srcMapImg.data)
 	{
 		std::cout << "loading map error" << std::endl;
@@ -28,52 +28,52 @@ bool readSrcMapImg(const std::string& filename, cv::Mat& srcMapImg)
 
 
 //--------------------------saveMapValue()-----------------------------------
-//±£´æÏñËØÖµµ½TXTÎÄ¼ş
-//MapImg£ºÊäÈëÍ¼Ïñ
-//filename£ºÊä³öÎÄ¼şÃû
-//mode: ·½Ê½
+//ä¿å­˜åƒç´ å€¼åˆ°TXTæ–‡ä»¶
+//MapImgï¼šè¾“å…¥å›¾åƒ
+//filenameï¼šè¾“å‡ºæ–‡ä»¶å
+//mode: æ–¹å¼
 void saveMapValue(cv::Mat MapImg, const std::string& filename, int mode = 0)
 {
 
 	std::ofstream fout(filename);
 	char buf[20];
-	if (mode == 0)//ÓÃIplImageÀàĞÍ°´ĞĞÁĞ±éÀúÏñËØ
+	if (mode == 0)//ç”¨IplImageç±»å‹æŒ‰è¡Œåˆ—éå†åƒç´ 
 	{
 		IplImage tempImg;
-		tempImg = IplImage(MapImg);//Mat×ªIplImage
+		tempImg = IplImage(MapImg);//Matè½¬IplImage
 		uchar* ptr;
 		for (int i = 0; i < tempImg.height; i++)
 		{
 			for (int j = 0; j < tempImg.width; j++)
 			{
-				ptr = cvPtr2D(&tempImg, i, j, NULL);//»ñÈ¡ÏñËØ×ø±êµãµÄÏñËØÖµ
-				sprintf(buf, "%d\t", ptr[0]);//Í¨¹ı¸ñÊ½¿ØÖÆ·û×ªÎªÊ®½øÖÆÊı´æ·ÅÔÚbufÖĞ
-				fout << buf;//Ğ´ÈëÎÄ¼ş
+				ptr = cvPtr2D(&tempImg, i, j, NULL);//è·å–åƒç´ åæ ‡ç‚¹çš„åƒç´ å€¼
+				sprintf(buf, "%d\t", ptr[0]);//é€šè¿‡æ ¼å¼æ§åˆ¶ç¬¦è½¬ä¸ºåè¿›åˆ¶æ•°å­˜æ”¾åœ¨bufä¸­
+				fout << buf;//å†™å…¥æ–‡ä»¶
 			}
 		}
 	}
 	else
-		if (mode == 1)//¶ÔMatÀàĞÍÓÃÖ¸Õë±éÀúÏñËØ
+		if (mode == 1)//å¯¹Matç±»å‹ç”¨æŒ‡é’ˆéå†åƒç´ 
 		{
 			cv::Mat outputImage;
-			// ´´½¨ÓëÔ­Í¼ÏñµÈ³ß´çµÄÍ¼Ïñ
+			// åˆ›å»ºä¸åŸå›¾åƒç­‰å°ºå¯¸çš„å›¾åƒ
 			outputImage.create(MapImg.size(), MapImg.type());
 			int nr = MapImg.rows;
-			// ½«3Í¨µÀ×ª»»Îª1Í¨µÀ
+			// å°†3é€šé“è½¬æ¢ä¸º1é€šé“
 			int nl = MapImg.cols*MapImg.channels();
 			for (int k = 0; k<nr; k++)
 			{
-				// Ã¿Ò»ĞĞÍ¼ÏñµÄÖ¸Õë
+				// æ¯ä¸€è¡Œå›¾åƒçš„æŒ‡é’ˆ
 				const uchar* inData = MapImg.ptr<uchar>(k);
 				uchar* outData = outputImage.ptr<uchar>(k);
 				for (int i = 0; i<nl; i++)
 				{
-					//if (inData[i] == 0)//½«°×É«ÇøÓò¸³ÖµÎª205
+					//if (inData[i] == 0)//å°†ç™½è‰²åŒºåŸŸèµ‹å€¼ä¸º205
 					//{
 					//	outData[i] = 205;
 					//}
-					sprintf(buf, "%x\t", inData[i]);//Í¨¹ı¸ñÊ½¿ØÖÆ·û×ªÎªÊ®½øÖÆÊı´æ·ÅÔÚbufÖĞ
-					fout << buf;//Ğ´ÈëÎÄ¼ş
+					sprintf(buf, "%x\t", inData[i]);//é€šè¿‡æ ¼å¼æ§åˆ¶ç¬¦è½¬ä¸ºåè¿›åˆ¶æ•°å­˜æ”¾åœ¨bufä¸­
+					fout << buf;//å†™å…¥æ–‡ä»¶
 				}
 			}
 		 }
@@ -82,36 +82,36 @@ void saveMapValue(cv::Mat MapImg, const std::string& filename, int mode = 0)
 
 
 //-------------------------------------fillMap()-------------------------------------------------
-//Ìî³äµØÍ¼ÄÚÏñËØµã
-//inputImg£º ÊäÈëÍ¼Ïñ
-//outputImg£ºÊä³öÍ¼Ïñ
-//contour£º  ÊäÈëÂÖÀª
-//measureDist:²âÁ¿µãµ½ÂÖÀªµÄ¾àÀë
-//			  µ±measureDistÉèÖÃÎªtrue Ê±£¬Èô·µ»ØÖµÎªÕı£¬±íÊ¾µãÔÚÂÖÀªÄÚ²¿£¬·µ»ØÖµÎª¸º£¬±íÊ¾ÔÚÂÖÀªÍâ²¿£¬·µ»ØÖµÎª0£¬±íÊ¾ÔÚÂÖÀªÉÏ¡£ 
-//            µ±measureDistÉèÖÃÎªfalseÊ±£¬Èô·µ»ØÖµÎª + 1£¬±íÊ¾µãÔÚÂÖÀªÄÚ²¿£¬·µ»ØÖµÎª - 1£¬±íÊ¾ÔÚÂÖÀªÍâ²¿£¬·µ»ØÖµÎª0£¬±íÊ¾ÔÚÂÖÀªÉÏ¡£
+//å¡«å……åœ°å›¾å†…åƒç´ ç‚¹
+//inputImgï¼š è¾“å…¥å›¾åƒ
+//outputImgï¼šè¾“å‡ºå›¾åƒ
+//contourï¼š  è¾“å…¥è½®å»“
+//measureDist:æµ‹é‡ç‚¹åˆ°è½®å»“çš„è·ç¦»
+//			  å½“measureDistè®¾ç½®ä¸ºtrue æ—¶ï¼Œè‹¥è¿”å›å€¼ä¸ºæ­£ï¼Œè¡¨ç¤ºç‚¹åœ¨è½®å»“å†…éƒ¨ï¼Œè¿”å›å€¼ä¸ºè´Ÿï¼Œè¡¨ç¤ºåœ¨è½®å»“å¤–éƒ¨ï¼Œè¿”å›å€¼ä¸º0ï¼Œè¡¨ç¤ºåœ¨è½®å»“ä¸Šã€‚ 
+//            å½“measureDistè®¾ç½®ä¸ºfalseæ—¶ï¼Œè‹¥è¿”å›å€¼ä¸º + 1ï¼Œè¡¨ç¤ºç‚¹åœ¨è½®å»“å†…éƒ¨ï¼Œè¿”å›å€¼ä¸º - 1ï¼Œè¡¨ç¤ºåœ¨è½®å»“å¤–éƒ¨ï¼Œè¿”å›å€¼ä¸º0ï¼Œè¡¨ç¤ºåœ¨è½®å»“ä¸Šã€‚
 void fillMap(cv::Mat &inputImg, cv::Mat &outputImg, std::vector < cv::Point> contour, bool measureDist)
 {
-	if (inputImg.channels() == 1)//µ¥Í¨µÀÍ¼Ïñ
+	if (inputImg.channels() == 1)//å•é€šé“å›¾åƒ
 	{
 		std::cout << "fill map ..." << std::endl;
 		int nr = inputImg.rows;
 		int nl = inputImg.cols;
 		for (int k = 0; k<nr; k++)
 		{
-			// Ã¿Ò»ĞĞÍ¼ÏñµÄÖ¸Õë
+			// æ¯ä¸€è¡Œå›¾åƒçš„æŒ‡é’ˆ
 			const uchar* inData = inputImg.ptr<uchar>(k);
 			uchar* outData = outputImg.ptr<uchar>(k);
 			for (int i = 0; i<nl; i++)
 			{
-				if (cv::pointPolygonTest(contour, cv::Point(i, k), measureDist)>0 && inData[i] < 230)//½«»ÒÉ«ÇøÓò¸³ÖµÎª255
+				if (cv::pointPolygonTest(contour, cv::Point(i, k), measureDist)>0 && inData[i] < 230)//å°†ç°è‰²åŒºåŸŸèµ‹å€¼ä¸º255
 				{
 					outData[i] = 255;
 				}
 			}
 		}
 		
-		cv::imshow("result",outputImg);//ÏÔÊ¾´¦Àí½á¹û
-		cv::imwrite("../data/result.pgm", outputImg);//±£´æ´¦Àí½á¹û
+		cv::imshow("result",outputImg);//æ˜¾ç¤ºå¤„ç†ç»“æœ
+		cv::imwrite("../data/result.pgm", outputImg);//ä¿å­˜å¤„ç†ç»“æœ
 		std::cout << "fill map success" << std::endl;
 	}
 	else
@@ -124,32 +124,32 @@ void fillMap(cv::Mat &inputImg, cv::Mat &outputImg, std::vector < cv::Point> con
 
 
 //----------------------colorReduce()-------------------------------
-//½µÉ«²Ê
-//inputImage£ºÊäÈëÍ¼Ïñ
-//outputImage£ºÊä³öÍ¼Ïñ
-//div£º  µÈ·Ö
+//é™è‰²å½©
+//inputImageï¼šè¾“å…¥å›¾åƒ
+//outputImageï¼šè¾“å‡ºå›¾åƒ
+//divï¼š  ç­‰åˆ†
 void colorReduce(const cv::Mat& inputImage, cv::Mat& outputImage, int div)
  {
-	// ´´½¨ÓëÔ­Í¼ÏñµÈ³ß´çµÄÍ¼Ïñ
+	// åˆ›å»ºä¸åŸå›¾åƒç­‰å°ºå¯¸çš„å›¾åƒ
 	 outputImage.create(inputImage.size(), inputImage.type());
 	 int nr = inputImage.rows;
-	// ½«3Í¨µÀ×ª»»Îª1Í¨µÀ
+	// å°†3é€šé“è½¬æ¢ä¸º1é€šé“
 	 int nl = inputImage.cols*inputImage.channels();
 	for (int k = 0; k<nr; k++)
 	{
-		// Ã¿Ò»ĞĞÍ¼ÏñµÄÖ¸Õë
+		// æ¯ä¸€è¡Œå›¾åƒçš„æŒ‡é’ˆ
 		const uchar* inData = inputImage.ptr<uchar>(k);
 		uchar* outData = outputImage.ptr<uchar>(k);
 		for (int i = 0; i<nl; i++)
 		{
-			 outData[i] = inData[i] / div*div + div / 2;//½µÉ«²Ê
+			 outData[i] = inData[i] / div*div + div / 2;//é™è‰²å½©
 		}
 	}
  }
 
 
 //------------------------------mouseHandler()-------------------------------------
-//Êó±ê»Øµ÷º¯Êı£¬»ñÈ¡ÏñËØÖµ
+//é¼ æ ‡å›è°ƒå‡½æ•°ï¼Œè·å–åƒç´ å€¼
 //
 //
 void mouseHandler(int event, int x, int y, int flags, void* param)
@@ -164,16 +164,16 @@ void mouseHandler(int event, int x, int y, int flags, void* param)
 	char label[20];
 	char label2[20];
 
-	cvInitFont(&font, CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 1);    //³õÊ¼»¯×ÖÌå
+	cvInitFont(&font, CV_FONT_HERSHEY_PLAIN, 1, 1, 0, 1, 1);    //åˆå§‹åŒ–å­—ä½“
 
 	if (event == CV_EVENT_LBUTTONDOWN)
 	{
-		//¶ÁÈ¡ÏñËØ
+		//è¯»å–åƒç´ 
 		ptr = cvPtr2D(img0, y, x, NULL);
 
 		sprintf(label, "Grey Level:%d", ptr[0]);
 		sprintf(label2, "Pixel: (%d, %d)", x, y);
-		//µ÷ÕûÏÔÊ¾Î»ÖÃ
+		//è°ƒæ•´æ˜¾ç¤ºä½ç½®
 		if (img0->width - x <= 180 || img0->height - y <= 20)
 		{
 			cvRectangle(img1, cvPoint(x - 180, y - 40), cvPoint(x - 10, y - 10), CV_RGB(255, 0, 0), CV_FILLED, 8, 0);
@@ -186,7 +186,7 @@ void mouseHandler(int event, int x, int y, int flags, void* param)
 			cvPutText(img1, label, cvPoint(x + 10, y), &font, CV_RGB(255, 255, 255));
 			cvPutText(img1, label2, cvPoint(x + 10, y + 20), &font, CV_RGB(255, 255, 255));
 		}
-		//ÒÔÊó±êÎªÖĞĞÄ»­µã
+		//ä»¥é¼ æ ‡ä¸ºä¸­å¿ƒç”»ç‚¹
 		CvPoint centerPoint;
 		centerPoint.x = x;
 		centerPoint.y = y;
@@ -200,18 +200,18 @@ void getPixelValue(IplImage* img)
 {
 	int exit = 0;
 	int c;
-	assert(img);//¼ìÑé²ÎÊıimgµÄºÏ·¨ĞÔ£¬imgÎª¿Õ£¬ÔòÖÕÖ¹³ÌĞò²¢·µ»Ø´íÎóÖµ
+	assert(img);//æ£€éªŒå‚æ•°imgçš„åˆæ³•æ€§ï¼Œimgä¸ºç©ºï¼Œåˆ™ç»ˆæ­¢ç¨‹åºå¹¶è¿”å›é”™è¯¯å€¼
 
-	if (img->nChannels != 1) //ÅĞ¶ÏÊÇ·ñÎª»Ò¶ÈÍ¼Ïñ£¬Èô²»ÊÇ£¬ÏÈ×ª»»Îª»Ò¶ÈÍ¼Ïñ
+	if (img->nChannels != 1) //åˆ¤æ–­æ˜¯å¦ä¸ºç°åº¦å›¾åƒï¼Œè‹¥ä¸æ˜¯ï¼Œå…ˆè½¬æ¢ä¸ºç°åº¦å›¾åƒ
 	{
-		//×ª»»Îª»Ò¶ÈÍ¼Ïñ
+		//è½¬æ¢ä¸ºç°åº¦å›¾åƒ
 		IplImage* gray = cvCreateImage(cvGetSize(img), img->depth, 1);
 		cvCvtColor(img, gray, CV_BGR2GRAY);
 	}
 	cvNamedWindow("img", 1);
 	cvSetMouseCallback("img", mouseHandler, (void*)img);
 	cvShowImage("img", img);
-	//¼ì²â¼üÅÌÊäÈë£¬°´Q¼üÍË³ö³ÌĞò
+	//æ£€æµ‹é”®ç›˜è¾“å…¥ï¼ŒæŒ‰Qé”®é€€å‡ºç¨‹åº
 	while (!exit)
 	{
 		c = cvWaitKey(0);
@@ -229,52 +229,52 @@ void getPixelValue(IplImage* img)
 }
 
 
-//-----------------------------------¡¾onMouse( )º¯Êı¡¿--------------------------------------    
-//Êó±êonMouse»Øµ÷º¯Êı£¬ÂşË®Ìî³ä
+//-----------------------------------ã€onMouse( )å‡½æ•°ã€‘--------------------------------------    
+//é¼ æ ‡onMouseå›è°ƒå‡½æ•°ï¼Œæ¼«æ°´å¡«å……
 //---------------------------------------------------------------------------------------------  
-cv::Mat dst;//ÂşË®Ìî³äÊä³öÍ¼Ïñ
-int g_nFillMode = 1;//ÂşË®Ìî³äµÄÄ£Ê½  
-int g_nLowDifference = 10, g_nUpDifference = 10;//¸º²î×î´óÖµ¡¢Õı²î×î´óÖµ  
-int g_nConnectivity = 8;//±íÊ¾floodFillº¯Êı±êÊ¶·ûµÍ°ËÎ»µÄÁ¬Í¨Öµ  
-int g_bIsColor  = false;//ÊÇ·ñÎª²ÊÉ«Í¼µÄ±êÊ¶·û²¼¶ûÖµ  
-bool g_bUseMask = false;//ÊÇ·ñÏÔÊ¾ÑÚÄ¤´°¿ÚµÄ²¼¶ûÖµ  
-int g_nNewMaskVal = 255;//ĞÂµÄÖØĞÂ»æÖÆµÄÏñËØÖµ  
+cv::Mat dst;//æ¼«æ°´å¡«å……è¾“å‡ºå›¾åƒ
+int g_nFillMode = 1;//æ¼«æ°´å¡«å……çš„æ¨¡å¼  
+int g_nLowDifference = 10, g_nUpDifference = 10;//è´Ÿå·®æœ€å¤§å€¼ã€æ­£å·®æœ€å¤§å€¼  
+int g_nConnectivity = 8;//è¡¨ç¤ºfloodFillå‡½æ•°æ ‡è¯†ç¬¦ä½å…«ä½çš„è¿é€šå€¼  
+int g_bIsColor  = false;//æ˜¯å¦ä¸ºå½©è‰²å›¾çš„æ ‡è¯†ç¬¦å¸ƒå°”å€¼  
+bool g_bUseMask = false;//æ˜¯å¦æ˜¾ç¤ºæ©è†œçª—å£çš„å¸ƒå°”å€¼  
+int g_nNewMaskVal = 255;//æ–°çš„é‡æ–°ç»˜åˆ¶çš„åƒç´ å€¼  
 std::vector < cv::Point> contour;
 bool measureDist;
 
 static void onMouse(int event, int x, int y, int, void*)
 {
-	// ÈôÊó±ê×ó¼üÃ»ÓĞ°´ÏÂ£¬±ã·µ»Ø  
+	// è‹¥é¼ æ ‡å·¦é”®æ²¡æœ‰æŒ‰ä¸‹ï¼Œä¾¿è¿”å›  
 	if (event != CV_EVENT_LBUTTONDOWN)
 		return;
 
-	//-------------------¡¾<1>µ÷ÓÃfloodFillº¯ÊıÖ®Ç°µÄ²ÎÊı×¼±¸²¿·Ö¡¿---------------  
+	//-------------------ã€<1>è°ƒç”¨floodFillå‡½æ•°ä¹‹å‰çš„å‚æ•°å‡†å¤‡éƒ¨åˆ†ã€‘---------------  
 	cv::Point seed = cv::Point(x, y);
-	if(cv::pointPolygonTest(contour, seed, measureDist)>0)//ÖÖ×ÓµãÔÚÂÖÀªÄÚ
+	if(cv::pointPolygonTest(contour, seed, measureDist)>0)//ç§å­ç‚¹åœ¨è½®å»“å†…
 	{
 	uchar pixelValue=dst.at<uchar>(y,x);
 	printf("Point(%d, %d):%d\n",x,y,pixelValue);
-	if(pixelValue==205)//Ö»´¦Àí»ÒÉ«ÇøÓò(205)
+	if(pixelValue==205)//åªå¤„ç†ç°è‰²åŒºåŸŸ(205)
 	{
-	int LowDifference = g_nFillMode == 0 ? 0 : g_nLowDifference;//¿Õ·¶Î§µÄÂşË®Ìî³ä£¬´ËÖµÉèÎª0£¬·ñÔòÉèÎªÈ«¾ÖµÄg_nLowDifference  
-	int UpDifference = g_nFillMode == 0 ? 0 : g_nUpDifference;//¿Õ·¶Î§µÄÂşË®Ìî³ä£¬´ËÖµÉèÎª0£¬·ñÔòÉèÎªÈ«¾ÖµÄg_nUpDifference  
+	int LowDifference = g_nFillMode == 0 ? 0 : g_nLowDifference;//ç©ºèŒƒå›´çš„æ¼«æ°´å¡«å……ï¼Œæ­¤å€¼è®¾ä¸º0ï¼Œå¦åˆ™è®¾ä¸ºå…¨å±€çš„g_nLowDifference  
+	int UpDifference = g_nFillMode == 0 ? 0 : g_nUpDifference;//ç©ºèŒƒå›´çš„æ¼«æ°´å¡«å……ï¼Œæ­¤å€¼è®¾ä¸º0ï¼Œå¦åˆ™è®¾ä¸ºå…¨å±€çš„g_nUpDifference  
 	int flags = g_nConnectivity + (g_nNewMaskVal << 8) +
-		(g_nFillMode == 1 ? CV_FLOODFILL_FIXED_RANGE : 0);//±êÊ¶·ûµÄ0~7Î»Îªg_nConnectivity£¬8~15Î»Îªg_nNewMaskVal×óÒÆ8Î»µÄÖµ£¬16~23Î»ÎªCV_FLOODFILL_FIXED_RANGE»òÕß0¡£  
+		(g_nFillMode == 1 ? CV_FLOODFILL_FIXED_RANGE : 0);//æ ‡è¯†ç¬¦çš„0~7ä½ä¸ºg_nConnectivityï¼Œ8~15ä½ä¸ºg_nNewMaskValå·¦ç§»8ä½çš„å€¼ï¼Œ16~23ä½ä¸ºCV_FLOODFILL_FIXED_RANGEæˆ–è€…0ã€‚  
 
-	cv::Rect ccomp;//¶¨ÒåÖØ»æÇøÓòµÄ×îĞ¡±ß½ç¾ØĞÎÇøÓò  
+	cv::Rect ccomp;//å®šä¹‰é‡ç»˜åŒºåŸŸçš„æœ€å°è¾¹ç•ŒçŸ©å½¢åŒºåŸŸ  
 
-	cv::Scalar newVal = 254;//ÔÚÖØ»æÇøÓòÏñËØµÄĞÂÖµ(254)
+	cv::Scalar newVal = 254;//åœ¨é‡ç»˜åŒºåŸŸåƒç´ çš„æ–°å€¼(254)
 	 
 	int area;
 
-	//--------------------¡¾<2>ÕıÊ½µ÷ÓÃfloodFillº¯Êı¡¿-----------------------------  
+	//--------------------ã€<2>æ­£å¼è°ƒç”¨floodFillå‡½æ•°ã€‘-----------------------------  
 
 		area = floodFill(dst, seed, newVal, &ccomp, cv::Scalar(LowDifference, LowDifference, LowDifference),
 			cv::Scalar(UpDifference, UpDifference, UpDifference), flags);
 
-	//cv::imshow("Ğ§¹ûÍ¼", dst);
-	cv::imwrite("../data/result.pgm", dst);//±£´æĞ§¹ûÍ¼
-	//std::cout << area << " ¸öÏñËØ±»ÖØ»æ\n";
+	//cv::imshow("æ•ˆæœå›¾", dst);
+	cv::imwrite("../data/result.pgm", dst);//ä¿å­˜æ•ˆæœå›¾
+	//std::cout << area << " ä¸ªåƒç´ è¢«é‡ç»˜\n";
 	}
 	else
 	{
@@ -288,16 +288,16 @@ static void onMouse(int event, int x, int y, int, void*)
 }
 
 
-//-----------------------------------¡¾floodFillonMouse( )º¯Êı¡¿--------------------------------------    
-//ÂşË®Ìî³ä,½øĞĞÏñËØ²Ù×÷
+//-----------------------------------ã€floodFillonMouse( )å‡½æ•°ã€‘--------------------------------------    
+//æ¼«æ°´å¡«å……,è¿›è¡Œåƒç´ æ“ä½œ
 //---------------------------------------------------------------------------------------------  
 int floodFillonMouse(cv::Mat inputImg,std::vector < cv::Point> _contour, bool _measureDist)
 {
-	inputImg.copyTo(dst);//ÊäÈëÍ¼Ïñ¿½±´
+	inputImg.copyTo(dst);//è¾“å…¥å›¾åƒæ‹·è´
 	contour=_contour;
 	measureDist=_measureDist;
 	cv::namedWindow("resultImg", CV_WINDOW_NORMAL);
-	//Êó±ê»Øµ÷º¯Êı  
+	//é¼ æ ‡å›è°ƒå‡½æ•°  
 	cv::setMouseCallback("resultImg", onMouse, 0);
 	
 	while (1)
