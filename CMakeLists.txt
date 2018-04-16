@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
-#setOpenCV_DIR
-set(OpenCV_DIR "/home/andyoyo/opencv/opencv-master/build")
+#setOpenCV_DIR 指定opencv路径（适用于多版本操作）
+#set(OpenCV_DIR "/home/andyoyo/opencv/opencv-master/build")
 
 project(map_PS)
 
